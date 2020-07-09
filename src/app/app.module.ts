@@ -11,6 +11,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthServiceService } from './auth-service.service';
+import { MainPageComponent } from './main-page/main-page.component';
 
 @NgModule({
   imports: [
@@ -20,12 +21,14 @@ import { AuthServiceService } from './auth-service.service';
     RouterModule.forRoot([
       { path: '', component: LandingPageComponent },
       { path: 'login', component: LoginPageComponent },
+      { path: 'main', component: MainPageComponent },
+      
     ])
   ],
   declarations: [
     AppComponent,
     TopBarComponent,    
-    LandingPageComponent, LoginPageComponent
+    LandingPageComponent, LoginPageComponent, MainPageComponent
   ],
   bootstrap: [ AppComponent ],
   providers: [AuthServiceService]

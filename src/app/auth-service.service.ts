@@ -8,9 +8,9 @@ export class AuthServiceService {
   constructor(private http: HttpClient) {}
   
   public authenticate(email, password) : Observable<HttpResponse<any>> {
-    var authInfo = btoa("admin@conprees.org:bar");
+    var authInfo = btoa(email+":"+password);
     var httpOptions = {
-      reportProgress:true,
+      //reportProgress:true,
       headers: new HttpHeaders({
           "Content-Type": "application/json",
           Authorization: "Basic " + authInfo
@@ -18,7 +18,7 @@ export class AuthServiceService {
   };
   
     return this.http
-      .post<any>("http://localhost:8888/", "",httpOptions)
+      .post<any>("http://localhost:8080/conprees_server/rest/oauth2/default/v1/token", "",httpOptions)
       .pipe(catchError(this.handleError));
   }
   private handleError(error: HttpErrorResponse) {
