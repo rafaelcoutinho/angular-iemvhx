@@ -15,7 +15,7 @@ export class LoginPageComponent implements OnInit {
     private service: AuthServiceService
   ) {
     this.loginForm = this.formBuilder.group({
-      email: "",
+      email: "admin@conprees.org",
       password: ""
     });
   }
@@ -23,10 +23,11 @@ export class LoginPageComponent implements OnInit {
   ngOnInit() {}
   
   onSubmit(loginData) {
+  console.log(loginData)
     // Process checkout data here
     this.service
-      .authenticate(this.loginForm.email, this.loginForm.password)
-        .subscribe((data => this.resp = { ...data }));
+      .authenticate(loginData.email, loginData.password)
+        .subscribe((data => this.resp = {  }));
 
     this.loginForm.reset();
 

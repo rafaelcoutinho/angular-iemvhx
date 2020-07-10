@@ -11,15 +11,23 @@ export class AuthServiceService {
     var authInfo = btoa(email+":"+password);
     var httpOptions = {
       //reportProgress:true,
-      headers: new HttpHeaders({
-          "Content-Type": "application/json",
+      
+      headers: new HttpHeaders({          
           Authorization: "Basic " + authInfo
-      })
+      }), 
+      observe:'events'
   };
   
     return this.http
-      .post<any>("http://localhost:8080/conprees_server/rest/oauth2/default/v1/token", "",httpOptions)
-      .pipe(catchError(this.handleError));
+      .post<HttpResponse<any>>("http://localhost:8080/conprees_server/rest/oauth2/default/v1/token",{},httpOptions)
+       .subscribe(resp => {
+      // display its headers
+      const keys = resp.headers.keys();
+      var headers = keys.map(key =>
+        `${key}: ${resp.headers.get(key)}`);
+
+     
+    });
   }
   private handleError(error: HttpErrorResponse) {
   if (error.error instanceof ErrorEvent) {
