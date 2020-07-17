@@ -8,12 +8,22 @@ import {
 } from "@angular/common/http";
 import { Observable, throwError } from "rxjs";
 import { catchError, retry } from "rxjs/operators";
-import { map } from 'rxjs/operators';
+import { map } from "rxjs/operators";
+import { environment } from "../environments/environment";
+
 @Injectable()
 export class AuthServiceService {
   private tokenInfo;
-  constructor(private http: HttpClient) {}
-
+  constructor(private http: HttpClient) {
+    this.tokenInfo = JSON.parse(localStorage.getItem("token"));
+    console.log("sabed", this.tokenInfo, localStorage.getItem("token"));
+  }
+  public isLoggedIn() {
+    return this.tokenInfo != null;
+  }
+  public getToken() {
+    return this.tokenInfo.access_token;
+  }
   public authenticate(email, password) {
     var authInfo = btoa(email + ":" + password);
     var httpOptions = {
@@ -23,23 +33,27 @@ export class AuthServiceService {
         Authorization: "Basic " + authInfo
       })
     };
-
+    console.log(`${environment.apiUrl}/rest/oauth2/default/v1/token`);
     return this.http
       .post(
-        "http://localhost:8080/conprees_server/rest/oauth2/default/v1/token",
+        `${environment.apiUrl}/rest/oauth2/default/v1/token`,
         null,
         httpOptions
       )
       .pipe(
         map(token => {
-          this.tokenInfo = token;
-          console.log(token);
+          this.tokenInfo = token.body;
+          console.log("token", this.tokenInfo);
           // store user details and jwt token in local storage to keep user logged in between page refreshes
-          // localStorage.setItem("user", JSON.stringify(user));          
+          localStorage.setItem("token", JSON.stringify(this.tokenInfo));
           return true;
         })
       );
-   
+  }
+
+  logout() {
+    // remove user from local storage and set current user to null
+    localStorage.removeItem("token");
   }
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
